@@ -1,4 +1,8 @@
+import axios from "axios";
+
+
 const Card = (article) => {
+  // JSX
   // TASK 5
   // ---------------------
   // Implement this function, which should return the markup you see below.
@@ -17,6 +21,35 @@ const Card = (article) => {
   //   </div>
   // </div>
   //
+
+  const cards = document.createElement("div")
+  cards.classList.add("card")
+  const headline = document.createElement("div")
+  headline.classList.add("headline")
+  const author = document.createElement("div")
+  author.classList.add("author")
+  const image = document.createElement("div")
+  image.classList.add("img-container")
+  const img = document.createElement("img")
+  img.src = article.authorPhoto
+  const authorName = document.createElement("span")
+  
+headline.textContent = article.headline
+authorName.textContent = article.authorName
+
+cards.appendChild(headline);
+cards.appendChild(author);
+author.appendChild(image);
+image.appendChild(img);
+author.appendChild(authorName);
+
+cards.addEventListener("click", ()=> {
+  console.log(article.headline)
+})
+
+
+return cards;
+
 }
 
 const cardAppender = (selector) => {
@@ -28,6 +61,25 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
+const cardApp = document.querySelector(selector);
+
+const options = {method: 'GET', url: 'http://localhost:5001/api/articles'};
+
+axios.request(options).then(function (response) {
+const dataArt = response.data.articles;
+const dataArray =  Object.values(dataArt)
+console.log(dataArray)
+for (let i = 0; i < dataArray.length; i++){
+  for (let j = 0; j < dataArray[i].length ; j++){
+    const cardss = Card(dataArray[i][j])
+    cardApp.appendChild(cardss)
+  }
+}
+}).catch(function (error) {
+  console.error(error);
+});
+  
+
 }
 
 export { Card, cardAppender }
